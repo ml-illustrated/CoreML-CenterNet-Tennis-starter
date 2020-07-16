@@ -1,0 +1,7 @@
+__pycache__
+*.pyc
+*~
+xcuserdata
+*.pth
+*.mlmodel
+.DS_Store
