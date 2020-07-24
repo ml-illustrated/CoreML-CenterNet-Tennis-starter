@@ -67,7 +67,7 @@ class CoreML_CenterNet_Tennis_starterTests: XCTestCase {
         let featureValue: MLFeatureValue = try MLFeatureValue(cgImage: test_image!.cgImage!, constraint: imageConstraint, options: imageOptions)
         
         let inputs: [String: Any] = [
-            "input.1": featureValue
+            inputName: featureValue
         ]
 
         if let provider = try? MLDictionaryFeatureProvider(dictionary: inputs),
@@ -102,8 +102,27 @@ class CoreML_CenterNet_Tennis_starterTests: XCTestCase {
     
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
+        let model = resnet_hc64()
+        let test_image : UIImage? = try? load_image(name: "drop-shot.384", type: "jpg")
+        
+        let inputName = "input.1"
+        let imageConstraint = model.model.modelDescription
+            .inputDescriptionsByName[inputName]!
+            .imageConstraint!
+
+        let featureValue: MLFeatureValue = try MLFeatureValue(cgImage: test_image!.cgImage!, constraint: imageConstraint)
+        
+        let inputs: [String: Any] = [
+            "input.1": featureValue
+        ]
+
+
         self.measure {
             // Put the code you want to measure the time of here.
+            
+            let provider = try? MLDictionaryFeatureProvider(dictionary: inputs)
+            let _ = try? model.model.prediction(from: provider!)
+            // resnet18_hc64: average: 0.408
         }
     }
 
